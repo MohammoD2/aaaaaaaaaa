@@ -4,13 +4,14 @@ import json
 import asyncio
 import requests
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
 # ------------------------------
 # Load environment variables
 # ------------------------------
-load_dotenv()  # Only needed for local testing
+load_dotenv()
 API_KEY = os.getenv("OPENROUTER_API_KEY")
 if not API_KEY:
     raise RuntimeError("OPENROUTER_API_KEY environment variable is not set!")
@@ -21,6 +22,23 @@ API_URL = "https://openrouter.ai/api/v1/chat/completions"
 # FastAPI app
 # ------------------------------
 app = FastAPI(title="AllOfTech AI Chatbot API")
+
+# ------------------------------
+# Allow CORS for your frontend domain
+# ------------------------------
+origins = [
+    "http://localhost:3000",  # for local testing
+    "http://127.0.0.1:5500",  # optional
+    "https://www.alloftech.site"  # production domain
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ------------------------------
 # Chatbot personality
@@ -100,10 +118,10 @@ async def ask_bot(user_message: str) -> str:
 @app.post("/chat")
 async def chat(request: ChatRequest):
     reply = await ask_bot(request.message)
-    return {"reply": clean_output(reply)}
+    return {"response": clean_output(reply)}  # frontend expects "response" key
 
 # ------------------------------
-# Run server
+# Run server locally
 # ------------------------------
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
