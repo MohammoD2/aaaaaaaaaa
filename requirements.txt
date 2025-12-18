@@ -5,7 +5,7 @@ python-dotenv
 pydantic
 langchain
 langchain-community
-faiss-cpu
+# faiss-cpu
 sentence-transformers
 azure-storage-blob
 sqlalchemy
