@@ -22,8 +22,8 @@ logger = logging.getLogger(__name__)
 # Configuration
 PROCESSED_DATA_DIR = "processed_data"
 MODEL_NAME = "all-MiniLM-L6-v2"
-OPENROUTER_API_KEY = st.secrets["OPENROUTER_API_KEY"]
-OPENROUTER_MODEL = "deepseek/deepseek-chat-v3.1:free"
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_MODEL = "mistralai/devstral-2512:free"
 
 # Initialize embeddings model
 embeddings_model = SentenceTransformer(MODEL_NAME)
